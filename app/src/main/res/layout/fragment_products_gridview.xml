@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/LinearLayoutProductLookup"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bginterno"
+
+
+    android:orientation="vertical"
+    >
+
+
+
+
+    <GridView
+        android:id="@+id/gridViewProductsResults"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fastScrollEnabled="true"
+        android:padding="5dp"
+        android:gravity="fill"
+        android:horizontalSpacing="5dp"
+        android:visibility="gone"
+
+        android:longClickable="false"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="5dp" >
+
+    </GridView>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/cardListProducts"
+
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+
+        android:paddingTop="10dp"
+        />
+
+
+</LinearLayout>
