@@ -17,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -121,6 +122,9 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onFailure(Call<JsonElement> call, Throwable t) {
                     Log.d("Error",t.getMessage());
+                    Toast.makeText(MainActivity.this,"Não foi possível carregar a lista de produtos",Toast.LENGTH_LONG).show();
+                    lProgress.setVisibility(View.GONE);
+                    lForm.setVisibility(View.VISIBLE);
                 }
             });
 
@@ -130,6 +134,9 @@ public class MainActivity extends AppCompatActivity
 
 
         } catch (Exception e) {
+            Toast.makeText(MainActivity.this,"Não foi possível carregar a lista de produtos",Toast.LENGTH_LONG).show();
+            lProgress.setVisibility(View.GONE);
+            lForm.setVisibility(View.VISIBLE);
             e.printStackTrace();
         }
 
@@ -201,6 +208,12 @@ public class MainActivity extends AppCompatActivity
             ft.addToBackStack(null).commit();
 
         } else if (id == R.id.nav_history) {
+
+            HistoricFragment historicFragment=new HistoricFragment();
+
+
+            ft.replace(R.id.content_frame, historicFragment, "mainFrag");
+            ft.addToBackStack(null).commit();
 
         }
 

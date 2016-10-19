@@ -20,5 +20,10 @@
         <item name="colorControlHighlight">@color/colorbuttonbuypressed</item>
         <item name="colorButtonNormal">@color/colorbuttonbuy</item>
     </style>
+    <style name="AppTheme.Dark.Dialog" parent="Theme.AppCompat.Dialog">
+        <item name="colorAccent">#0000FF</item>
+        <item name="android:textColorPrimary">#000000</item>
+        <item name="android:background">#000000</item>
+    </style>
 
 </resources>

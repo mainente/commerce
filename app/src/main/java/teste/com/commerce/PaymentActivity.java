@@ -1,6 +1,7 @@
 package teste.com.commerce;
 
 import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -78,6 +79,14 @@ public class PaymentActivity extends AppCompatActivity {
             btnBuy.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
+                    final ProgressDialog progressDialog = new ProgressDialog(PaymentActivity.this,
+                            R.style.AppTheme_Dark_Dialog);
+                    progressDialog.setIndeterminate(true);
+                    progressDialog.setMessage("Finalizando Compra...");
+                    progressDialog.show();
+
+
                     String url="https://private-b3620-desafio.apiary-mock.com/commerce/";
                         Gson gson = new GsonBuilder()
                                 .setLenient()
@@ -132,6 +141,8 @@ public class PaymentActivity extends AppCompatActivity {
 
                                     dbOpenHelper.insertTransaction(bValue.doubleValue(), idCard, joResponse.getString("status"));
 
+                                    progressDialog.dismiss();
+
                                         Toast.makeText(PaymentActivity.this, "Compra realizada", Toast.LENGTH_LONG).show();
                                         finish();
 
@@ -150,16 +161,19 @@ public class PaymentActivity extends AppCompatActivity {
                                 Log.d("Error", t.getMessage());
 
                                 Toast.makeText(PaymentActivity.this, "Erro ao realizar pagamento", Toast.LENGTH_LONG).show();
+                                progressDialog.dismiss();
                             }
                         });
 
                     }else {
                         Toast.makeText(PaymentActivity.this,"Nenhum cartão foi selecionado para pagamento",Toast.LENGTH_LONG).show();
+                        progressDialog.dismiss();
                     }
 
                     }catch (Exception e){
 
                         Toast.makeText(PaymentActivity.this,"Erro ao realizar pagamento",Toast.LENGTH_LONG).show();
+                        progressDialog.dismiss();
 
 
 
@@ -176,6 +190,7 @@ public class PaymentActivity extends AppCompatActivity {
 
         }catch (Exception e){
             Toast.makeText(PaymentActivity.this,"Erro ao realizar pagamento",Toast.LENGTH_LONG).show();
+
 
 
         }
