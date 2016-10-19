@@ -10,9 +10,9 @@ public class Card {
     private int expiration_month;
     private int expiration_year;
     private String CVV;
-    private Boolean selected;
+    private int selected;
 
-    public Card(String card_holder, String card_number, String card_brand, int expiration_month, int expiration_year, String CVV,Boolean selected) {
+    public Card(String card_holder, String card_number, String card_brand, int expiration_month, int expiration_year, String CVV,int selected) {
         this.card_holder = card_holder;
         this.card_number = card_number;
         this.card_brand = card_brand;
@@ -24,11 +24,11 @@ public class Card {
 
 
 
-    public Boolean getSelected() {
+    public int getSelected() {
         return selected;
     }
 
-    public void setSelected(Boolean selected) {
+    public void setSelected(int selected) {
         this.selected = selected;
     }
 

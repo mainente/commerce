@@ -52,7 +52,7 @@ public class ProductsGridFragment extends Fragment {
 			gridViewAllProducts.setAdapter(productsGridAdapter);
 			gridViewAllProducts.setNumColumns(3);
 */
-			lLayout = new GridLayoutManager(getActivity(), 3);
+			lLayout = new GridLayoutManager(getActivity(), 2);
 
 			RecyclerView rView = (RecyclerView)v.findViewById(R.id.cardListProducts);
 			rView.setHasFixedSize(true);

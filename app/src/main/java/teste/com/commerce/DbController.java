@@ -108,11 +108,11 @@ public class DbController {
 
     }
 
-    public Cursor listCardSelected() {
+    public Cursor listCardSelected() throws Exception {
 
 
         SQLiteDatabase db = dbOpen.getReadableDatabase();
-        String sql = "select * from CardTransaction where selected=true;";
+        String sql = "select * from CardTransaction where selected=1";
         Cursor cursor = db.rawQuery(sql, null);
         if (cursor.moveToFirst()) {
 
@@ -135,6 +135,8 @@ public class DbController {
         ContentValues valores;
         long resultado = 0;
         try {
+
+            unSelectedCard();
 
 
             db = dbOpen.getWritableDatabase();
@@ -177,7 +179,7 @@ public class DbController {
 
         db = dbOpen.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("selected", false);
+        values.put("selected", 0);
         db.update("CardTransaction",values,null,null);
         if (result == -1) {
             db.close();

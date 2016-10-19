@@ -15,7 +15,6 @@
         android:layout_height="150dp"
         android:id="@+id/imgProducts"
 
-        android:src="@drawable/download"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp" />
@@ -51,22 +50,35 @@
 
         android:padding="15dp"
         android:theme="@style/MyButton"
-        android:layout_margin="30dp"
+        android:layout_margin="20dp"
         android:gravity="center"
         android:drawableLeft="@drawable/shoppingcart"
 
         android:id="@+id/btnBuy"
         android:layout_below="@+id/price"
         android:layout_centerHorizontal="true" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtabout"
+        android:text="Descrição:"
+        android:textSize="18dp"
+        android:layout_marginRight="20dp"
+        android:layout_below="@+id/btnBuy"
+        android:layout_alignStart="@+id/btnBuy"
+        />
     <com.uncopt.android.widget.text.justify.JustifiedTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
         android:id="@+id/txtdetail"
         android:text="teste"
-        android:layout_margin="20dp"
-        android:layout_below="@+id/btnBuy"
-        android:layout_alignStart="@+id/btnBuy" />
+
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="5dp"
+        android:layout_below="@+id/txtabout"
+        android:layout_alignStart="@+id/txtabout"
+        android:layout_marginTop="10dp" />
 
 
 

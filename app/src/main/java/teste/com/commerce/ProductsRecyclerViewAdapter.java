@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  * Created by mainente on 13/10/16.
@@ -42,6 +43,9 @@ public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRe
         try {
             holder.nameProd.setText(jaProducts.getJSONObject(position).getString("title"));
             holder.price.setText(jaProducts.getJSONObject(position).getString("value"));
+            String resource = "drawable";
+            final int id = a.getResources().getIdentifier(jaProducts.getJSONObject(position).getString("image"), resource, a.getPackageName());
+            holder.imageView.setImageResource(id);
         } catch (Exception e) {
             e.printStackTrace();
         }

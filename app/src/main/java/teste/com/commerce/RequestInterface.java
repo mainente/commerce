@@ -25,7 +25,7 @@ public interface RequestInterface {
 
 
 
-    @POST("/users/new")
+    @POST("sendtransaction")
     Call<JsonElement> sendTransaction(@Body Transaction transaction);
 
 }

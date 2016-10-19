@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -20,6 +22,8 @@ import com.uncopt.android.widget.text.justify.JustifiedTextView;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
+
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -33,12 +37,19 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class PaymentActivity extends AppCompatActivity {
 
     int idCard;
+    BigDecimal bValue;
+    Toolbar mToolbar;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.payment_activity);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        //Action bar
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Bundle intent = getIntent().getExtras();
 
         try {
@@ -77,12 +88,19 @@ public class PaymentActivity extends AppCompatActivity {
 
                     final DbController dbOpenHelper=new DbController(PaymentActivity.this);
 
-                    Cursor cursor=dbOpenHelper.listCardSelected();
+                    Cursor cursor= null;
+                    try {
+
+
+                        cursor = dbOpenHelper.listCardSelected();
+
 
                     final TextView txtValue=(TextView)findViewById(R.id.price);
 
 
                     if (cursor.moveToFirst()) {
+
+                        bValue = Extras.getInstance().getBigDecimalFromDecimalString(txtValue.getText().toString().replace("R$", ""));
 
                         transaction.setCard_brand(cursor.getString(cursor.getColumnIndex("cardBrand")));
                         transaction.setCard_holder(cursor.getString(cursor.getColumnIndex("cardHolder")));
@@ -90,18 +108,8 @@ public class PaymentActivity extends AppCompatActivity {
                         transaction.setCVV(cursor.getString(cursor.getColumnIndex("CVV")));
                         transaction.setExpiration_month(cursor.getInt(cursor.getColumnIndex("expiration_month")));
                         transaction.setExpiration_year(cursor.getInt(cursor.getColumnIndex("expiration_year")));
-                        transaction.setValue(Double.valueOf(txtValue.getText().toString()));
-                        idCard=cursor.getInt(cursor.getColumnIndex("id"));
-
-
-
-
-
-
-
-                    }
-
-
+                        transaction.setValue(bValue.doubleValue());
+                        idCard = cursor.getInt(cursor.getColumnIndex("id"));
 
 
                         Retrofit retrofit = new Retrofit.Builder()
@@ -120,16 +128,16 @@ public class PaymentActivity extends AppCompatActivity {
 
                                     JsonElement jsonResponse = response.body();
 
-                                    JSONObject joResponse=new JSONObject(jsonResponse.toString());
+                                    JSONObject joResponse = new JSONObject(jsonResponse.toString());
 
-                                    if(dbOpenHelper.insertTransaction(Double.valueOf(txtValue.getText().toString()),idCard,joResponse.getString("status"))){
+                                    dbOpenHelper.insertTransaction(bValue.doubleValue(), idCard, joResponse.getString("status"));
 
-                                    }else{
+                                        Toast.makeText(PaymentActivity.this, "Compra realizada", Toast.LENGTH_LONG).show();
+                                        finish();
 
-                                    }
 
 
-                                }catch (Exception e){
+                                } catch (Exception e) {
 
                                     e.printStackTrace();
 
@@ -139,13 +147,23 @@ public class PaymentActivity extends AppCompatActivity {
 
                             @Override
                             public void onFailure(Call<JsonElement> call, Throwable t) {
-                                Log.d("Error",t.getMessage());
+                                Log.d("Error", t.getMessage());
 
-                                Toast.makeText(PaymentActivity.this,"Erro ao realizar pagamento",Toast.LENGTH_LONG).show();
+                                Toast.makeText(PaymentActivity.this, "Erro ao realizar pagamento", Toast.LENGTH_LONG).show();
                             }
                         });
 
+                    }else {
+                        Toast.makeText(PaymentActivity.this,"Nenhum cartão foi selecionado para pagamento",Toast.LENGTH_LONG).show();
+                    }
 
+                    }catch (Exception e){
+
+                        Toast.makeText(PaymentActivity.this,"Erro ao realizar pagamento",Toast.LENGTH_LONG).show();
+
+
+
+                    }
 
 
 
@@ -157,6 +175,8 @@ public class PaymentActivity extends AppCompatActivity {
             });
 
         }catch (Exception e){
+            Toast.makeText(PaymentActivity.this,"Erro ao realizar pagamento",Toast.LENGTH_LONG).show();
+
 
         }
 
@@ -168,7 +188,23 @@ public class PaymentActivity extends AppCompatActivity {
 
 
     }
-
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (android.R.id.home == item.getItemId()) {
+            //	NavUtils.navigateUpTo(this, new Intent(this, ChargeActivity.class));
+            finish();
+            return true;
+            //Intent i = new Intent();
+            //i.setClass(ZCLMenuWithHomeButtonActivity.this, ChargeActivity.class);
+            //i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            //startActivity(i);
+            //return true;
+        }
+        else {
+            return super.onOptionsItemSelected(item);
+        }
+//	    return false;
+    }
 
 
 }

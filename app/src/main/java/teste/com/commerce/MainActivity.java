@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity
         lForm=(View)findViewById(R.id.lForm);
         lProgress.setVisibility(View.VISIBLE);
         lForm.setVisibility(View.GONE);
+        DbController dbController=new DbController(this);
 
 
 
@@ -177,7 +178,7 @@ public class MainActivity extends AppCompatActivity
         FragmentTransaction ft=fm.beginTransaction();
 
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_list) {
             try {
                 JSONArray jaProducts = joProducts.getJSONArray("products");
                 ProductsGridFragment fragment1 = new ProductsGridFragment();
@@ -191,7 +192,7 @@ public class MainActivity extends AppCompatActivity
 
             }
 
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_register) {
 
             RegisterCardFragment register=new RegisterCardFragment();
 
@@ -199,10 +200,7 @@ public class MainActivity extends AppCompatActivity
             ft.replace(R.id.content_frame, register, "mainFrag");
             ft.addToBackStack(null).commit();
 
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
+        } else if (id == R.id.nav_history) {
 
         }
 

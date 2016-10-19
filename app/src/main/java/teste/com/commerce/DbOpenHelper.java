@@ -22,7 +22,7 @@ public class DbOpenHelper extends SQLiteOpenHelper {
 
         try {
 
-            String sql = "CREATE TABLE CardTransaction(id integer primary key autoincrement, cardHolder text, cardNumber text, cardBrand text, expiration_month integer, expiration_year integer, CVV String, selected boolean);";
+            String sql = "CREATE TABLE CardTransaction(id integer primary key autoincrement, cardHolder text, cardNumber text, cardBrand text, expiration_month integer, expiration_year integer, CVV String, selected integer);";
 
             db.execSQL(sql);
 
