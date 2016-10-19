@@ -1,6 +1,8 @@
 package teste.com.commerce;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,12 +17,14 @@ import org.json.JSONArray;
  */
 public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRecyclerViewAdapter.RecyclerViewHolders> {
 
-    private Context context;
+    private Activity a;
+    Context context;
     JSONArray jaProducts;
 
-    public ProductsRecyclerViewAdapter(Context context, JSONArray jaProducts) {
+    public ProductsRecyclerViewAdapter(Activity context, JSONArray jaProducts) {
         this.jaProducts = jaProducts;
         this.context = context;
+        a=context;
     }
 
     @Override
@@ -69,7 +73,17 @@ public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRe
 
         @Override
         public void onClick(View view) {
-            Toast.makeText(view.getContext(), "Clicked Country Position = " + getPosition(), Toast.LENGTH_SHORT).show();
+
+            try {
+                Intent payment = new Intent(a, PaymentActivity.class);
+                payment.putExtra("joProducts", jaProducts.getJSONObject(getAdapterPosition()).toString());
+
+                a.startActivity(payment);
+            }catch (Exception e){
+
+            }
+
+
         }
     }
 }

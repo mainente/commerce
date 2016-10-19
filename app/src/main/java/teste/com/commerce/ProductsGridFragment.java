@@ -16,8 +16,6 @@ import org.json.JSONArray;
 
 public class ProductsGridFragment extends Fragment {
 
-	GridView gridViewAllProducts;
-	ProductsGridAdapter productsGridAdapter;
 	View v;
 	JSONArray jaProducts;
 	private GridLayoutManager lLayout;

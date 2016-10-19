@@ -6,6 +6,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -16,13 +18,28 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import okhttp3.OkHttpClient;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     JSONObject joProducts;
+     View lProgress;
+    View lForm;
+
+
 
 
 
@@ -37,6 +54,7 @@ public class MainActivity extends AppCompatActivity
 
 
 
+
         final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -45,53 +63,76 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        new AsyncTask<Void, Void, Boolean>(){
-
-            @Override
-            protected Boolean doInBackground(Void... params) {
-                // TODO Auto-generated method stub
-                try {
-
-                    String url="https://private-b3620-desafio.apiary-mock.com/commerce";
+        lProgress=(View)findViewById(R.id.list_progress);
+        lForm=(View)findViewById(R.id.lForm);
+        lProgress.setVisibility(View.VISIBLE);
+        lForm.setVisibility(View.GONE);
 
 
 
-                    OkHttp okHttp = new OkHttp();
-                    String json = okHttp.run(url);
-                    joProducts = new JSONObject(json);
-                    return true;
+        String url="https://private-b3620-desafio.apiary-mock.com/commerce/";
+        try {
+            Gson gson = new GsonBuilder()
+                    .setLenient()
+                    .create();
+            OkHttpClient client = new OkHttpClient();
 
 
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(url)
+                    .client(client)
+                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .build();
+            RequestInterface request = retrofit.create(RequestInterface.class);
+            final Call<JsonElement> call = request.getJSON();
 
-                } catch (Exception e) {
-                    // TODO: handle exception
-                    e.printStackTrace();
-                }
-                return false;
-            }
 
-            @Override
-            protected void onPostExecute(Boolean result) {
-                if(result) {
-                    JSONArray jaProducts = null;
+            call.enqueue(new Callback<JsonElement>() {
+                @Override
+                public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
                     try {
-                        jaProducts = joProducts.getJSONArray("products");
+
+                        JsonElement jsonResponse = response.body();
+                       joProducts=new JSONObject(jsonResponse.toString());
+
+
+                        JSONArray jaProducts = joProducts.getJSONArray("products");
                         ProductsGridFragment fragment1 = new ProductsGridFragment();
 
 
-
                         fragment1.setJaProducts(jaProducts);
-                        FragmentTransaction ft = getFragmentManager().beginTransaction();
-                        ft.add(R.id.content_frame, fragment1);
+                        FragmentTransaction ft;
+
+                        ft = getFragmentManager().beginTransaction();
+                        ft.add(R.id.content_frame, fragment1, "frag");
                         ft.commit();
-                      //  ft.replace(R.id.content_frame, fragment1);
-                    } catch (Exception e) {
+                        lProgress.setVisibility(View.GONE);
+                        lForm.setVisibility(View.VISIBLE);
+
+                    }catch (Exception e){
+
                         e.printStackTrace();
+
                     }
+
                 }
 
-            }
-        }.execute();
+                @Override
+                public void onFailure(Call<JsonElement> call, Throwable t) {
+                    Log.d("Error",t.getMessage());
+                }
+            });
+
+
+
+
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
 
     }
 
@@ -132,10 +173,31 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        android.app.FragmentManager fm = getFragmentManager();
+        FragmentTransaction ft=fm.beginTransaction();
+
 
         if (id == R.id.nav_camera) {
-            // Handle the camera action
+            try {
+                JSONArray jaProducts = joProducts.getJSONArray("products");
+                ProductsGridFragment fragment1 = new ProductsGridFragment();
+
+
+                fragment1.setJaProducts(jaProducts);
+
+                ft.replace(R.id.content_frame, fragment1, "Frag");
+                ft.commit();
+            }catch (Exception e){
+
+            }
+
         } else if (id == R.id.nav_gallery) {
+
+            RegisterCardFragment register=new RegisterCardFragment();
+
+
+            ft.replace(R.id.content_frame, register, "mainFrag");
+            ft.addToBackStack(null).commit();
 
         } else if (id == R.id.nav_slideshow) {
 
